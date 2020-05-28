@@ -15,7 +15,8 @@ qmra.MonteCarlo <- function(inputData,
                                disinfectName2 = 'ozone',
                                disinfectName3 = 'uv',
                                organisms = c('crypto','giardia','rota','campy','eColi'),
-                               efficiency
+                               efficiency,
+                               ingest
                             ){
   concentration <- data.frame(
     crypto=rep(NA, maxiter),
@@ -35,7 +36,8 @@ qmra.MonteCarlo <- function(inputData,
                          disinfectName1 = disinfectName1, 
                          disinfectName2 = disinfectName2,
                          disinfectName3 = disinfectName3,
-                         efficiency = efficiency
+                         efficiency = efficiency,
+                         ingest = ingest
           )
   
   
@@ -55,7 +57,8 @@ qmra._MonteCarlo <- function(maxiter=100,
                             disinfectName1,
                             disinfectName2,
                             disinfectName3,
-                            efficiency
+                            efficiency,
+                            ingest
 ){
   
   treatment <- treatmentDist(maxiter)
@@ -131,9 +134,10 @@ qmra._MonteCarlo <- function(maxiter=100,
   Ecoli_k <- matrix(nrow=maxiter, ncol=1)
   
   for(i in 1:maxiter){
-    #Hard coding a bunch of values
-    ingestion[i] <- TriRand(0.5, 1, 2.5)
     
+    ingestion[i] <- TriRand(ingest$min, ingest$mean, ingest$max)
+    
+    #Hard coding a bunch of values
     Crypto_k[i] <- TriRand(0.0074,0.0539,0.3044)                    # Allow uncertainty in k parameter
     morbRatio[,'crypto'][i] <- TriRand(0.3,0.5,0.7)                     # Uncertain morbidity ratio
     
@@ -181,7 +185,6 @@ qmra._MonteCarlo <- function(maxiter=100,
       dose[,org][i] <- treatedConc[,org][i] * ingestion[i]
     }
     
-    ## TODO: Create a modelMap and vectorize the parameters to avoid repetition below
     eps <- 1E-16
     # Coag
     postCoagRisk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postCoagDose[,'crypto'][i]) + eps

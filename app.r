@@ -78,7 +78,7 @@ ui <- fluidPage(
       h3('Ingestion'),
       numericInput('ingest_min', 'Min:', 0.5, min = 0.001, max = 10),
       numericInput('ingest_mean', 'Likeliest:', 1, min = 0.001, max = 10),
-      numericInput('ingest_sd', 'Max:', 2.5, min = 0.001, max = 10)
+      numericInput('ingest_max', 'Max:', 2.5, min = 0.001, max = 10)
     ),
     div(
       h3('Concentration'),
@@ -210,7 +210,8 @@ server <- function(input, output, session) {
                                  filtName = filtInp$name,
                                  disinfectName1 = disinfect1Inp$name,
                                  disinfectName2 = disinfect2Inp$name,
-                                 efficiency = efficiency
+                                 efficiency = efficiency,
+                                 ingest = list(min=input$ingest_min, mean=input$ingest_mean, max=input$ingest_max)
                                 )
         
         annRisk <- data.frame(crypto = numeric(input$maxiter),
