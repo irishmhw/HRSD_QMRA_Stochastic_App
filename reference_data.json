@@ -1,0 +1,348 @@
+{
+	"coagulation": [{
+		"name": "None",
+		"short": "none",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "User Specified",
+		"short": "userSpecified",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "Coag Only (inline)",
+		"short": "coag",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "Coag Floc (direct)",
+		"short": "coagFloc",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "Coag Floc Sed",
+		"short": "coagFlocSed",
+		"effect": "removal",
+		"crypto": {
+			"est": 1.86184,
+			"sd": 0.93916
+		},
+		"giardia": {
+			"est": 1.61200,
+			"sd": 0.94220
+		},
+		"rota": {
+			"est": 1.76353,
+			"sd": 0.97147
+		},
+		"campy": {
+			"est": 1.55179,
+			"sd": 0.94722
+		},
+		"eColi": {
+			"est": 1.55179,
+			"sd": 0.94722
+		}
+	}],
+	"filtration":[{
+		"name": "None",
+		"short": "none",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "User Specified",
+		"short": "userSpecified",
+		"effect": "removal",
+		"crypto": {
+			"est": 0,
+			"sd": 0
+		},
+		"giardia": {
+			"est": 0,
+			"sd": 0
+		},
+		"rota": {
+			"est": 0,
+			"sd": 0
+		},
+		"campy": {
+			"est": 0,
+			"sd": 0
+		},
+		"eColi": {
+			"est": 0,
+			"sd": 0
+		}
+	},{
+		"name": "Rapid Granular (no coag)",
+		"short": "rapidGran",
+		"effect": "removal",
+		"crypto": {
+			"est": 1.10943,
+			"sd": 0.71450
+		},
+		"giardia": {
+			"est": 1.22500,
+			"sd": 0.94486
+		},
+		"rota": {
+			"est": 0.76857,
+			"sd": 0.77000
+		},
+		"campy": {
+			"est": 0.54595,
+			"sd": 0.28998
+		},
+		"eColi": {
+			"est": 0.54595,
+			"sd": 0.28998
+		}
+	},{
+		"name": "Rapid Granular (direct)",
+		"short": "rapidGranCoag",
+		"effect": "removal",
+		"crypto": {
+			"est": 2.97125,
+			"sd": 1.32586
+		},
+		"giardia": {
+			"est": 2.86154,
+			"sd": 1.08126
+		},
+		"rota": {
+			"est": 0.58718,
+			"sd": 0.47327
+		},
+		"campy": {
+			"est": 1.35714,
+			"sd": 0.43534
+		},
+		"eColi": {
+			"est": 1.35714,
+			"sd": 0.43534
+		}
+	},{
+		"name": "Rapid Granular (coag/sed)",
+		"short": "rapidGranCoagSed",
+		"effect": "removal",
+		"crypto": {
+			"est": 2.41452,
+			"sd": 1.27384
+		},
+		"giardia": {
+			"est": 1.91875,
+			"sd": 1.06960
+		},
+		"rota": {
+			"est": 1.10682,
+			"sd": 0.69663
+		},
+		"campy": {
+			"est": 0.86667,
+			"sd": 0.38079
+		},
+		"eColi": {
+			"est": 0.86667,
+			"sd": 0.38079
+		}
+	},{
+		"name": "Slow Sand",
+		"short": "slowSand",
+		"effect": "removal",
+		"crypto": {
+			"est": 4.65556,
+			"sd": 1.32374
+		},
+		"giardia": {
+			"est": 4.88000,
+			"sd": 0.96561
+		},
+		"rota": {
+			"est": 2.18140,
+			"sd": 1.08915
+		},
+		"campy": {
+			"est": 2.68807,
+			"sd": 1.08450
+		},
+		"eColi": {
+			"est": 2.68807,
+			"sd": 1.08450
+		}
+	},{
+		"name": "Membrane (micro)",
+		"short": "membraneMicro",
+		"effect": "removal",
+		"crypto": {
+			"est": 6.13333,
+			"sd": 0.88
+		},
+		"giardia": {
+			"est": 6.61667,
+			"sd": 0.45
+		},
+		"rota": {
+			"est": 1.10000,
+			"sd": 1.08
+		},
+		"campy": {
+			"est": 4.60000,
+			"sd": 1.87
+		},
+		"eColi": {
+			"est": 4.60000,
+			"sd": 1.87
+		}
+	},{
+		"name": "Membrane (ultra)",
+		"short": "membraneUltra",
+		"effect": "removal",
+		"crypto": {
+			"est": 6.41111,
+			"sd": 0.44
+		},
+		"giardia": {
+			"est": 6.17500,
+			"sd": 0.82
+		},
+		"rota": {
+			"est": 4.11579,
+			"sd": 1.13
+		},
+		"campy": {
+			"est": 8.00,
+			"sd": 0.0
+		},
+		"eColi": {
+			"est": 8.00,
+			"sd": 0.0
+		}
+	}],
+	"DALY": [{
+		"name": "Mild Diarrhea",
+		"short": "mildDiarrhea",
+		"weight": 0.067
+	}, {
+		"name": "Bloody Diarrhea",
+		"short": "bloodyDiarrhea",
+		"weight": 0.39
+	}, {
+		"name": "HUS",
+		"short": "HUS",
+		"weight": 0.93
+	}, {
+		"name": "ESRD",
+		"short": "ESRD",
+		"weight": 0.95
+	}, {
+		"name": "Reactive Arthritis",
+		"short": "reactiveArth",
+		"weight": 0.21
+	}, {
+		"name": "GBS clinical effects",
+		"short": "GBSclinicRes",
+		"weight": 0.29
+	}, {
+		"name": "GBS residual effects",
+		"short": "GBSRes",
+		"weight": 5.8
+	}],
+	"populations": [{
+		
+	}]
+}

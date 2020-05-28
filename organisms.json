@@ -1,0 +1,234 @@
+{
+  "organisms": [{
+    "name": "Cryptosporidium",
+    "short": "crypto",
+    "beta": 12.1,
+    "optimizedParam": 0.018,
+    "model": "Exponential",
+    "illGivenInfect": 0.7,
+    "YLD": 0.0012850471,
+    "LYL": 0.0003898257,
+    "DALYs": 0.0016748728,
+    "mildDiarrhea": {
+      "proportion": 0.99999,
+      "duration": 0.01918
+    },
+    "bloodyDiarrhea": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSclinicRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "reactiveArth": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "HUS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "ESRD": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "deathGBS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "death": {
+      "proportion": 0.00001,
+      "duration": 0
+    }
+
+  }, {
+    "name": "Giardia",
+    "short": "giardia",
+    "beta": 3.48e1,
+    "optimizedParam": 0.01982,
+    "model": "Exponential",
+    "illGivenInfect": 0.4,
+    "YLD": 0.0012850471,
+    "LYL": 0.0003898257,
+    "DALYs": 0.0016748728,
+    "mildDiarrhea": {
+      "proportion": 0.99999,
+      "duration": 0.01918
+    },
+    "bloodyDiarrhea": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSclinicRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "reactiveArth": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "HUS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "ESRD": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "deathGBS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "death": {
+      "proportion": 0.00001,
+      "duration": 0
+    }
+  }, {
+    "name": "Rotavirus",
+    "short": "rota",
+    "beta": 0.4415,
+    "optimizedParam": 0.265,
+    "model": "BetaBinom",
+    "illGivenInfect": 0.88,
+    "YLD": 0.0043826300,
+    "LYL": 0.0038982566,
+    "DALYs": 0.0082808866,
+    "mildDiarrhea": {
+      "proportion": 0.5,
+      "duration": 0.01918
+    },
+    "bloodyDiarrhea": {
+      "proportion": 0.5,
+      "duration": 0.01918
+    },
+    "GBSclinicRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "reactiveArth": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "HUS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "ESRD": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "deathGBS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "death": {
+      "proportion": 0.0001,
+      "duration": 0
+    }
+  }, {
+    "name": "Campylobacter",
+    "short": "campy",
+    "beta": 7.59,
+    "optimizedParam": 0.145,
+    "model": "BetaBinom",
+    "illGivenInfect": 1.0,
+    "YLD": 0.0032476400,
+    "LYL": 0.0014060200,
+    "DALYs": 0.0046536600,
+    "mildDiarrhea": {
+      "proportion": 1.0,
+      "duration": 0.01397
+    },
+    "bloodyDiarrhea": {
+      "proportion": 0.06,
+      "duration": 0.0230
+    },
+    "GBSclinicRes": {
+      "proportion": 0.0002,
+      "duration": 0
+    },
+    "GBSRes": {
+      "proportion": 0.0002,
+      "duration": 0
+    },
+    "reactiveArth": {
+      "proportion": 0.023,
+      "duration": 0.115
+    },
+    "HUS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "ESRD": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "deathGBS": {
+      "proportion": 0.0000046,
+      "duration": 0
+    },
+    "death": {
+      "proportion": 0.0001,
+      "duration": 0
+    }
+  }, {
+    "name": "E. Coli",
+    "short": "eColi",
+    "beta": 2.21830,
+    "optimizedParam": 0.0571,
+    "model": "BetaBinom",
+    "illGivenInfect": 1.0,
+    "YLD": 0.0141588752,
+    "LYL": 0.0097456414,
+    "DALYs": 0.0239045166,
+    "mildDiarrhea": {
+      "proportion": 0.53,
+      "duration": 0.00932
+    },
+    "bloodyDiarrhea": {
+      "proportion": 0.47,
+      "duration": 0.01534
+    },
+    "GBSclinicRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "GBSRes": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "reactiveArth": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "HUS": {
+      "proportion": 0.01,
+      "duration": 0.0575
+    },
+    "ESRD": {
+      "proportion": 0.00118,
+      "duration": 9.35
+    },
+    "deathGBS": {
+      "proportion": 0,
+      "duration": 0
+    },
+    "death": {
+      "proportion": 0.00025,
+      "duration": 0
+    }
+  }]
+}
