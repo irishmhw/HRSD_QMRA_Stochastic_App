@@ -5,7 +5,6 @@ require(dplyr)
 
 
 orgJson <- fromJSON('./organisms.json')
-refJson <- fromJSON('./reference_data.json')
 organisms <-
   orgJson$organisms[c('name',
                       'short',
