@@ -1,3 +1,7 @@
+list.of.packages <- c('jsonlite','dplyr','reshape','ggplot2','gridExtra')
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 require(shiny)
 require(shinyjs)
 require(jsonlite)
