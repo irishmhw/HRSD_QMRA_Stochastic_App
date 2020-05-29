@@ -353,13 +353,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     ))),
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Dose))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
@@ -382,13 +382,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     ))),
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Dose))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
@@ -416,13 +416,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Risk ~ of ~
                            Infection))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
@@ -446,13 +446,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Risk ~ of ~
                            Infection))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
@@ -478,13 +478,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Risk ~ of ~
                            Illness))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
@@ -508,13 +508,13 @@ qmra.treatmentPlots <- function(orgName, doses, risks, illness){
     y = expression(bold( ~ log[10] ~ of ~ Exiting ~ Risk ~ of ~
                            Illness))) +
     stat_summary(
-      fun = median,
+      fun.y = median,
       geom = "point",
       size = 2.5,
       color = "white"
     ) +
     stat_summary(
-      fun = mean,
+      fun.y = mean,
       geom = "point",
       size = 2,
       color = "black",
