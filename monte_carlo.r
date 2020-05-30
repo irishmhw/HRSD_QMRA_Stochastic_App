@@ -6,6 +6,8 @@ require(gridExtra)
 require(reshape)
 source("./TriRand.r")
 source("./qmra_utils.r")
+source('./treatment_dist.r')
+source('./gof.r')
 
 qmra.MonteCarlo <- function(inputData, 
                                maxiter = 1000,
@@ -123,164 +125,150 @@ qmra._MonteCarlo <- function(maxiter=100,
   postDisinfect3Morb <- matrix(nrow=maxiter, ncol=length(organisms), dimnames = list(NULL, organisms))
   riskMorb <- matrix(nrow=maxiter, ncol=length(organisms), dimnames = list(NULL, organisms))
   
-  ingestion <- matrix(nrow=maxiter, ncol=1)
+  ingestion <- rtri(maxiter, 0.5, 1, 2)
   
-  Crypto_k <- matrix(nrow=maxiter, ncol=1)
-  Giardia_k <- matrix(nrow=maxiter, ncol=1)
-  Rota_alpha <- matrix(nrow=maxiter, ncol=1)
-  Rota_N50 <- matrix(nrow=maxiter, ncol=1)
-  Campy_alpha <- matrix(nrow=maxiter, ncol=1)
-  Campy_N50 <- matrix(nrow=maxiter, ncol=1)
-  Ecoli_k <- matrix(nrow=maxiter, ncol=1)
+  Crypto_k <- rtri(maxiter, 0.0074, 0.0539, 0.3044)
+  morbRatio[,'crypto'] <- rtri(maxiter, 0.3, 0.5, 0.7)
   
-  for(i in 1:maxiter){
+  Giardia_k <- rtri(maxiter, 0.0085,0.0199,0.0371)                   # Allow uncertainty in k parameter
+  morbRatio[,'giardia'] <- runif(maxiter, 0.4, 0.4)                        # Uncertain morbidity ratio
+  
+  Rota_alpha <- rtri(maxiter, 1.64E-01, 2.53E-01, 5.18E-01)       # Allow uncertainty in alpha parameter
+  Rota_N50 <- rtri(maxiter, 2.49E+00, 6.17E+00, 1.89E+01)         # Allow uncertainty in alpha parameter		
+  morbRatio[,'rota']<- runif(maxiter,0.88,0.88)                    # Uncertain morbidity ratio
+  
+  Campy_alpha <- rtri(maxiter, 4.99E-02, 1.44E-01, 2.66E-01)       # Allow uncertainty in alpha parameter
+  Campy_N50 <- rtri(maxiter, 8.11, 8.9E+02, 6.69E+03)         # Allow uncertainty in alpha parameter		
+  morbRatio[,'campy'] <- runif(maxiter, 1, 1)                    # Uncertain morbidity ratio
+  
+  Ecoli_k <- rtri(maxiter, 1.20E-04, 2.18E-04, 5.99E-04)       # Allow uncertainty in alpha parameter
+  morbRatio[,'eColi'] <- runif(maxiter, 1, 1)                    # Uncertain morbidity ratio
+  
+  
+  for(org in organisms){
+    coag[,org] <- coag[,org] * efficiency$coag
+    disinfect1[,org] <- disinfect1[,org] * efficiency$disinfect1
+    filt[,org] <- filt[,org] * efficiency$filt
+    bioFilt[,org] <- bioFilt[,org] * efficiency$bioFilt
+    disinfect2[,org] <- disinfect2[,org] * efficiency$disinfect2
+    disinfect3[,org] <- disinfect3[,org] * efficiency$disinfect3
     
-    ingestion[i] <- TriRand(ingest$min, ingest$mean, ingest$max)
+    rawConc[,org] <- concentration[,org]
+    # present output for each lr
+    # Order is coag, disinfect1, bioFilt, filt, disinfect2, disinfect3
+    postCoagConc[,org] <- rawConc[,org] * 10 ^ (-1 * coag[,org])
+    postDisinfect1Conc[,org] <- rawConc[,org] * 10 ^ (-1 * ( coag[,org] + disinfect1[,org]))
+    postBioFiltConc[,org] <- rawConc[,org] * 10 ^ (-1 * ( coag[,org] + disinfect1[,org] + bioFilt[,org]))
+    postFiltConc[,org] <- rawConc[,org] * 10 ^ (-1 * ( coag[,org] + disinfect1[,org] + bioFilt[,org] + filt[,org]))
+    postDisinfect2Conc[,org] <- rawConc[,org] * 10 ^ (-1 * ( coag[,org] + disinfect1[,org] + bioFilt[,org] + filt[,org] + disinfect2[,org]))
+    postDisinfect3Conc[,org] <- rawConc[,org] * 10 ^ (-1 * ( coag[,org] + disinfect1[,org] + bioFilt[,org] + filt[,org] + disinfect2[,org] +  disinfect3[,org]))
     
-    #Hard coding a bunch of values
-    Crypto_k[i] <- TriRand(0.0074,0.0539,0.3044)                    # Allow uncertainty in k parameter
-    morbRatio[,'crypto'][i] <- TriRand(0.3,0.5,0.7)                     # Uncertain morbidity ratio
+    postCoagDose[,org] <- postCoagConc[,org] * ingestion
+    postDisinfect1Dose[,org] <- postDisinfect1Conc[,org] * ingestion
+    postBioFiltDose[,org] <- postBioFiltConc[,org] * ingestion
+    postFiltDose[,org] <- postFiltConc[,org] * ingestion
+    postDisinfect2Dose[,org] <- postDisinfect2Conc[,org] * ingestion
+    postDisinfect3Dose[,org] <- postDisinfect3Conc[,org] * ingestion
     
-    Giardia_k[i] <- TriRand(0.0085,0.0199,0.0371)                   # Allow uncertainty in k parameter
-    morbRatio[,'giardia'][i] <- runif(1,0.4,0.4)                        # Uncertain morbidity ratio
+    treatedConc[,org] <- postDisinfect3Conc[,org] * ingestion
+    dose[,org] <- treatedConc[,org] * ingestion
+  }
+  
+  eps <- 1E-16
+  # Coag
+  postCoagRisk[,'crypto'] <- qmra.exponential(Crypto_k, postCoagDose[,'crypto']) + eps
+  postCoagRisk[,'giardia'] <- qmra.exponential(Giardia_k, postCoagDose[,'giardia']) + eps
+  postCoagRisk[,'eColi'] <- qmra.exponential(Ecoli_k, postCoagDose[,'eColi']) + eps
+  
+  postCoagRisk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postCoagDose[,'rota']) + eps
+  postCoagRisk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postCoagDose[,'campy']) + eps
+  
+  # Disinfect1
+  postDisinfect1Risk[,'crypto'] <- qmra.exponential(Crypto_k, postDisinfect1Dose[,'crypto']) + eps
+  postDisinfect1Risk[,'giardia'] <- qmra.exponential(Giardia_k, postDisinfect1Dose[,'giardia']) + eps
+  postDisinfect1Risk[,'eColi'] <- qmra.exponential(Ecoli_k, postDisinfect1Dose[,'eColi']) + eps
+  
+  postDisinfect1Risk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postDisinfect1Dose[,'rota']) + eps
+  postDisinfect1Risk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postDisinfect1Dose[,'campy']) + eps
+  
+  # BioFilt
+  postBioFiltRisk[,'crypto'] <- qmra.exponential(Crypto_k, postBioFiltDose[,'crypto']) + eps 
+  postBioFiltRisk[,'giardia'] <- qmra.exponential(Giardia_k, postBioFiltDose[,'giardia']) + eps
+  postBioFiltRisk[,'eColi'] <- qmra.exponential(Ecoli_k, postBioFiltDose[,'eColi']) + eps
+  
+  postBioFiltRisk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postBioFiltDose[,'rota']) + eps
+  postBioFiltRisk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postBioFiltDose[,'campy']) + eps
+  
+  # Filt
+  postFiltRisk[,'crypto'] <- qmra.exponential(Crypto_k, postFiltDose[,'crypto']) + eps 
+  postFiltRisk[,'giardia'] <- qmra.exponential(Giardia_k, postFiltDose[,'giardia']) + eps
+  postFiltRisk[,'eColi'] <- qmra.exponential(Ecoli_k, postFiltDose[,'eColi']) + eps
+  
+  postFiltRisk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postFiltDose[,'rota']) + eps
+  postFiltRisk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postFiltDose[,'campy']) + eps
+  
+  
+  # Disinfect2
+  postDisinfect2Risk[,'crypto'] <- qmra.exponential(Crypto_k, postDisinfect2Dose[,'crypto']) + eps 
+  postDisinfect2Risk[,'giardia'] <- qmra.exponential(Giardia_k, postDisinfect2Dose[,'giardia']) + eps
+  postDisinfect2Risk[,'eColi'] <- qmra.exponential(Ecoli_k, postDisinfect2Dose[,'eColi']) + eps
+  
+  postDisinfect2Risk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postDisinfect2Dose[,'rota']) + eps
+  postDisinfect2Risk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postDisinfect2Dose[,'campy']) + eps
+  
+  # Disinfect3
+  postDisinfect3Risk[,'crypto'] <- qmra.exponential(Crypto_k, postDisinfect3Dose[,'crypto']) + eps 
+  postDisinfect3Risk[,'giardia'] <- qmra.exponential(Giardia_k, postDisinfect3Dose[,'giardia']) + eps
+  postDisinfect3Risk[,'eColi'] <- qmra.exponential(Ecoli_k, postDisinfect3Dose[,'eColi']) + eps
+  
+  postDisinfect3Risk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, postDisinfect3Dose[,'rota']) + eps
+  postDisinfect3Risk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, postDisinfect3Dose[,'campy']) + eps
+  
+  # final
+  risk[,'crypto'] <- qmra.exponential(Crypto_k, dose[,'crypto']) + eps 
+  risk[,'giardia'] <- qmra.exponential(Giardia_k, dose[,'giardia']) + eps
+  risk[,'eColi'] <- qmra.exponential(Ecoli_k, dose[,'eColi']) + eps
+  
+  risk[,'rota'] <- qmra.bp(Rota_alpha, Rota_N50, dose[,'rota']) + eps
+  risk[,'campy'] <- qmra.bp(Campy_alpha, Campy_N50, dose[,'campy']) + eps
+  
+  
+  for(org in organisms){
+    postCoagMorb[,org] <- postCoagRisk[,org] * morbRatio[,org]
+    postDisinfect1Morb[,org] <- postDisinfect1Risk[,org] * morbRatio[,org]
+    postBioFiltMorb[,org] <- postBioFiltRisk[,org] * morbRatio[,org]
+    postFiltMorb[,org] <- postFiltRisk[,org] * morbRatio[,org]
+    postDisinfect2Morb[,org] <- postDisinfect2Risk[,org] * morbRatio[,org]
+    postDisinfect3Morb[,org] <- postDisinfect2Risk[,org] * morbRatio[,org]
     
-    Rota_alpha[i] <- TriRand(1.64E-01,2.53E-01,5.18E-01)       # Allow uncertainty in alpha parameter
-    Rota_N50[i] <- TriRand(2.49E+00,6.17E+00,1.89E+01)         # Allow uncertainty in alpha parameter		
-    morbRatio[,'rota'][i] <- runif(1,0.88,0.88)                    # Uncertain morbidity ratio
-    
-    
-    Campy_alpha[i] <- TriRand(4.99E-02,1.44E-01,2.66E-01)       # Allow uncertainty in alpha parameter
-    Campy_N50[i] <- TriRand(8.11,8.9E+02,6.69E+03)         # Allow uncertainty in alpha parameter		
-    morbRatio[,'campy'][i] <- runif(1,1,1)                    # Uncertain morbidity ratio
-    
-    Ecoli_k[i] <- TriRand(1.20E-04,2.18E-04,5.99E-04)       # Allow uncertainty in alpha parameter
-    morbRatio[,'eColi'][i] <- runif(1,1,1)                    # Uncertain morbidity ratio
-    
-    for(org in organisms){
-      coag[,org][i] <- coag[,org][i] * efficiency$coag
-      disinfect1[,org][i] <- disinfect1[,org][i] * efficiency$disinfect1
-      filt[,org][i] <- filt[,org][i] * efficiency$filt
-      bioFilt[,org][i] <- bioFilt[,org][i] * efficiency$bioFilt
-      disinfect2[,org][i] <- disinfect2[,org][i] * efficiency$disinfect2
-      disinfect3[,org][i] <- disinfect3[,org][i] * efficiency$disinfect3
-      
-      rawConc[,org][i] <- concentration[,org][i]
-      # present output for each lr
-      # Order is coag, disinfect1, bioFilt, filt, disinfect2, disinfect3
-      postCoagConc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * coag[,org][i])
-      postDisinfect1Conc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * ( coag[,org][i] + disinfect1[,org][i]))
-      postBioFiltConc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * ( coag[,org][i] + disinfect1[,org][i] + bioFilt[,org][i]))
-      postFiltConc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * ( coag[,org][i] + disinfect1[,org][i] + bioFilt[,org][i] + filt[,org][i]))
-      postDisinfect2Conc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * ( coag[,org][i] + disinfect1[,org][i] + bioFilt[,org][i] + filt[,org][i] + disinfect2[,org][i]))
-      postDisinfect3Conc[,org][i] <- rawConc[,org][i] * 10 ^ (-1 * ( coag[,org][i] + disinfect1[,org][i] + bioFilt[,org][i] + filt[,org][i] + disinfect2[,org][i] +  disinfect3[,org][i]))
-      
-      postCoagDose[,org][i] <- postCoagConc[,org][i] * ingestion[i]
-      postDisinfect1Dose[,org][i] <- postDisinfect1Conc[,org][i] * ingestion[i]
-      postBioFiltDose[,org][i] <- postBioFiltConc[,org][i] * ingestion[i]
-      postFiltDose[,org][i] <- postFiltConc[,org][i] * ingestion[i]
-      postDisinfect2Dose[,org][i] <- postDisinfect2Conc[,org][i] * ingestion[i]
-      postDisinfect3Dose[,org][i] <- postDisinfect3Conc[,org][i] * ingestion[i]
-      
-      treatedConc[,org][i] <- postDisinfect3Conc[,org][i] * ingestion[i]
-      dose[,org][i] <- treatedConc[,org][i] * ingestion[i]
-    }
-    
-    eps <- 1E-16
-    # Coag
-    postCoagRisk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postCoagDose[,'crypto'][i]) + eps
-    postCoagRisk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postCoagDose[,'giardia'][i]) + eps
-    postCoagRisk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postCoagDose[,'eColi'][i]) + eps
-    
-    postCoagRisk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postCoagDose[,'rota'][i]) + eps
-    postCoagRisk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postCoagDose[,'campy'][i]) + eps
-    
-    # Disinfect1
-    postDisinfect1Risk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postDisinfect1Dose[,'crypto'][i]) + eps
-    postDisinfect1Risk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postDisinfect1Dose[,'giardia'][i]) + eps
-    postDisinfect1Risk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postDisinfect1Dose[,'eColi'][i]) + eps
-    
-    postDisinfect1Risk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postDisinfect1Dose[,'rota'][i]) + eps
-    postDisinfect1Risk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postDisinfect1Dose[,'campy'][i]) + eps
-    
-    # BioFilt
-    postBioFiltRisk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postBioFiltDose[,'crypto'][i]) + eps 
-    postBioFiltRisk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postBioFiltDose[,'giardia'][i]) + eps
-    postBioFiltRisk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postBioFiltDose[,'eColi'][i]) + eps
-    
-    postBioFiltRisk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postBioFiltDose[,'rota'][i]) + eps
-    postBioFiltRisk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postBioFiltDose[,'campy'][i]) + eps
-    
-    # Filt
-    postFiltRisk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postFiltDose[,'crypto'][i]) + eps 
-    postFiltRisk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postFiltDose[,'giardia'][i]) + eps
-    postFiltRisk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postFiltDose[,'eColi'][i]) + eps
-    
-    postFiltRisk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postFiltDose[,'rota'][i]) + eps
-    postFiltRisk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postFiltDose[,'campy'][i]) + eps
-    
-    
-    # Disinfect2
-    postDisinfect2Risk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postDisinfect2Dose[,'crypto'][i]) + eps 
-    postDisinfect2Risk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postDisinfect2Dose[,'giardia'][i]) + eps
-    postDisinfect2Risk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postDisinfect2Dose[,'eColi'][i]) + eps
-    
-    postDisinfect2Risk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postDisinfect2Dose[,'rota'][i]) + eps
-    postDisinfect2Risk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postDisinfect2Dose[,'campy'][i]) + eps
-    
-    # Disinfect3
-    postDisinfect3Risk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], postDisinfect3Dose[,'crypto'][i]) + eps 
-    postDisinfect3Risk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], postDisinfect3Dose[,'giardia'][i]) + eps
-    postDisinfect3Risk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], postDisinfect3Dose[,'eColi'][i]) + eps
-    
-    postDisinfect3Risk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], postDisinfect3Dose[,'rota'][i]) + eps
-    postDisinfect3Risk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], postDisinfect3Dose[,'campy'][i]) + eps
-    
-    # final
-    risk[,'crypto'][i] <- qmra.exponential(Crypto_k[i], dose[,'crypto'][i]) + eps 
-    risk[,'giardia'][i] <- qmra.exponential(Giardia_k[i], dose[,'giardia'][i]) + eps
-    risk[,'eColi'][i] <- qmra.exponential(Ecoli_k[i], dose[,'eColi'][i]) + eps
-    
-    risk[,'rota'][i] <- qmra.bp(Rota_alpha[i], Rota_N50[i], dose[,'rota'][i]) + eps
-    risk[,'campy'][i] <- qmra.bp(Campy_alpha[i], Campy_N50[i], dose[,'campy'][i]) + eps
-    
-    
-    for(org in organisms){
-      postCoagMorb[,org][i] <- postCoagRisk[,org][i] * morbRatio[,org][i]
-      postDisinfect1Morb[,org][i] <- postDisinfect1Risk[,org][i] * morbRatio[,org][i]
-      postBioFiltMorb[,org][i] <- postBioFiltRisk[,org][i] * morbRatio[,org][i]
-      postFiltMorb[,org][i] <- postFiltRisk[,org][i] * morbRatio[,org][i]
-      postDisinfect2Morb[,org][i] <- postDisinfect2Risk[,org][i] * morbRatio[,org][i]
-      postDisinfect3Morb[,org][i] <- postDisinfect2Risk[,org][i] * morbRatio[,org][i]
-      
-      riskMorb[,org][i] <- risk[,org][i] * morbRatio[,org][i]
-    }
+    riskMorb[,org] <- risk[,org] * morbRatio[,org]
   }
   
   return(list(
-      postCoagDose=postCoagDose,
-      postBioFiltDose=postBioFiltDose,
-      postFiltDose=postFiltDose,
-      postDisinfect1Dose=postDisinfect1Dose,
-      postDisinfect2Dose=postDisinfect2Dose,
-      postDisinfect3Dose=postDisinfect3Dose,
-      dose=dose,
-      postCoagRisk=postCoagRisk,
-      postBioFiltRisk=postBioFiltRisk,
-      postFiltRisk=postFiltRisk,
-      postDisinfect1Risk=postDisinfect1Risk,
-      postDisinfect2Risk=postDisinfect2Risk,
-      postDisinfect3Risk=postDisinfect3Risk,
-      risk=risk, 
-      lr=lr, 
-      treatedConc=treatedConc, 
-      postCoagMorb=postCoagMorb,
-      postBioFiltMorb=postBioFiltMorb,
-      postFiltMorb=postFiltMorb,
-      postDisinfect1Morb=postDisinfect1Morb,
-      postDisinfect2Morb=postDisinfect2Morb,
-      postDisinfect3Morb=postDisinfect3Morb,
-      riskMorb=riskMorb
-    ))
+    postCoagDose=postCoagDose,
+    postBioFiltDose=postBioFiltDose,
+    postFiltDose=postFiltDose,
+    postDisinfect1Dose=postDisinfect1Dose,
+    postDisinfect2Dose=postDisinfect2Dose,
+    postDisinfect3Dose=postDisinfect3Dose,
+    dose=dose,
+    postCoagRisk=postCoagRisk,
+    postBioFiltRisk=postBioFiltRisk,
+    postFiltRisk=postFiltRisk,
+    postDisinfect1Risk=postDisinfect1Risk,
+    postDisinfect2Risk=postDisinfect2Risk,
+    postDisinfect3Risk=postDisinfect3Risk,
+    risk=risk, 
+    lr=lr, 
+    treatedConc=treatedConc, 
+    postCoagMorb=postCoagMorb,
+    postBioFiltMorb=postBioFiltMorb,
+    postFiltMorb=postFiltMorb,
+    postDisinfect1Morb=postDisinfect1Morb,
+    postDisinfect2Morb=postDisinfect2Morb,
+    postDisinfect3Morb=postDisinfect3Morb,
+    riskMorb=riskMorb
+  ))
 }
 
 

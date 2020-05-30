@@ -37,51 +37,47 @@ uv <- matrix(NaN, nrow=maxiter, ncol=length(organisms), dimnames = list(NULL, or
 
 
 # Simulate the reductions ---------------------
-for(i in 1:maxiter)
-{
-  coag[,'crypto'][i] <- TriRand(0.46,1.8,3.78); 
-  coag[,'giardia'][i] <- TriRand(0.48,1.3,0.48)
-  coag[,'rota'][i] <- TriRand(0.34,1.7,4.06); 
-  coag[,'campy'][i] <- TriRand(0.6,1.4,3.7); 
-  coag[,'eColi'][i] <- TriRand(0.6,1.4,3.7)
-  
-  filt_nc[,'crypto'][i] <- TriRand(0.16,1.1,2.22); 
-  filt_nc[,'giardia'][i] <- TriRand(0.07,1.0,2.39); 
-  filt_nc[,'rota'][i] <- TriRand(0.11,0.6,1.59); 
-  filt_nc[,'campy'][i] <- TriRand(0.2,0.4,1); 
-  filt_nc[,'eColi'][i] <- TriRand(0.2,0.4,1)
-  
-  filt_inline[,'crypto'][i] <- TriRand(0.89,2.9,5.255); 
-  filt_inline[,'giardia'][i] <- TriRand(1.3,3,4.6); 
-  filt_inline[,'rota'][i] <- TriRand(0.16,0.3,1.5); 
-  filt_inline[,'campy'][i] <- TriRand(0.86,1.4,1.95); 
-  filt_inline[,'eColi'][i] <- TriRand(0.86,1.4,1.95)
-  
-  filt_coag[,'crypto'][i] <- TriRand(1.055,2.1,4.565); 
-  filt_coag[,'giardia'][i] <- TriRand(0.72,1.7,3.75); 
-  filt_coag[,'rota'][i] <- TriRand(0.265,0.8,2.11); 
-  filt_coag[,'campy'][i] <- TriRand(0.44,0.9,1.42); 
-  filt_coag[,'eColi'][i] <- TriRand(0.44,0.9,1.42)
-  
-  filt_sand[,'crypto'][i] <- TriRand(3.15,5,6.3); 
-  filt_sand[,'giardia'][i] <- TriRand(4.07,4.7,5.87); 
-  filt_sand[,'campy'][i] <- TriRand(0.66,2.1,3.7); 
-  filt_sand[,'rota'][i] <- TriRand(1.288,2.4,4.64); 
-  filt_sand[,'eColi'][i] <- TriRand(1.288,2.4,4.64)
-  
-  filt_micro[,'crypto'][i] <- TriRand(4.7,6.3,6.86); 
-  filt_micro[,'giardia'][i] <- TriRand(5.95,6.8,6.975); 
-  filt_micro[,'campy'][i] <- TriRand(0.1,0.5,2.4); 
-  filt_micro[,'rota'][i] <- TriRand(2.86,3.9,6.66); 
-  filt_micro[,'eColi'][i] <- TriRand(2.86,3.9,6.66)
-  
-  filt_ultra[,'crypto'][i] <- TriRand(5.74,6.4,6.96); 
-  filt_ultra[,'giardia'][i] <- TriRand(5.04,6.55,6.965); 
-  filt_ultra[,'rota'][i] <- TriRand(2.06,4.3,5.71); 
-  filt_ultra[,'campy'][i] <- TriRand(8,8,8); 
-  filt_ultra[,'eColi'][i] <- TriRand(8,8,8)
-  
-}
+coag[,'crypto'] <- rtri(maxiter, 0.46,1.8,3.78); 
+coag[,'giardia'] <- rtri(maxiter, 0.48,1.3,0.48)
+coag[,'rota'] <- rtri(maxiter, 0.34,1.7,4.06); 
+coag[,'campy'] <- rtri(maxiter, 0.6,1.4,3.7); 
+coag[,'eColi'] <- rtri(maxiter, 0.6,1.4,3.7)
+
+filt_nc[,'crypto'] <- rtri(maxiter, 0.16,1.1,2.22); 
+filt_nc[,'giardia'] <- rtri(maxiter, 0.07,1.0,2.39); 
+filt_nc[,'rota'] <- rtri(maxiter, 0.11,0.6,1.59); 
+filt_nc[,'campy'] <- rtri(maxiter, 0.2,0.4,1); 
+filt_nc[,'eColi'] <- rtri(maxiter, 0.2,0.4,1)
+
+filt_inline[,'crypto'] <- rtri(maxiter, 0.89,2.9,5.255); 
+filt_inline[,'giardia'] <- rtri(maxiter, 1.3,3,4.6); 
+filt_inline[,'rota'] <- rtri(maxiter, 0.16,0.3,1.5); 
+filt_inline[,'campy'] <- rtri(maxiter, 0.86,1.4,1.95); 
+filt_inline[,'eColi'] <- rtri(maxiter, 0.86,1.4,1.95)
+
+filt_coag[,'crypto'] <- rtri(maxiter, 1.055,2.1,4.565); 
+filt_coag[,'giardia'] <- rtri(maxiter, 0.72,1.7,3.75); 
+filt_coag[,'rota'] <- rtri(maxiter, 0.265,0.8,2.11); 
+filt_coag[,'campy'] <- rtri(maxiter, 0.44,0.9,1.42); 
+filt_coag[,'eColi'] <- rtri(maxiter, 0.44,0.9,1.42)
+
+filt_sand[,'crypto'] <- rtri(maxiter, 3.15,5,6.3); 
+filt_sand[,'giardia'] <- rtri(maxiter, 4.07,4.7,5.87); 
+filt_sand[,'campy'] <- rtri(maxiter, 0.66,2.1,3.7); 
+filt_sand[,'rota'] <- rtri(maxiter, 1.288,2.4,4.64); 
+filt_sand[,'eColi'] <- rtri(maxiter, 1.288,2.4,4.64)
+
+filt_micro[,'crypto'] <- rtri(maxiter, 4.7,6.3,6.86); 
+filt_micro[,'giardia'] <- rtri(maxiter, 5.95,6.8,6.975); 
+filt_micro[,'campy'] <- rtri(maxiter, 0.1,0.5,2.4); 
+filt_micro[,'rota'] <- rtri(maxiter, 2.86,3.9,6.66); 
+filt_micro[,'eColi'] <- rtri(maxiter, 2.86,3.9,6.66)
+
+filt_ultra[,'crypto'] <- rtri(maxiter, 5.74,6.4,6.96); 
+filt_ultra[,'giardia'] <- rtri(maxiter, 5.04,6.55,6.965); 
+filt_ultra[,'rota'] <- rtri(maxiter, 2.06,4.3,5.71); 
+filt_ultra[,'campy'] <- rtri(maxiter, 8,8,8); 
+filt_ultra[,'eColi'] <- rtri(maxiter, 8,8,8)
 
 # Disinfection are point estimates ---------
 
@@ -135,6 +131,6 @@ return(list(coag=coag,
             chloromines=chloromines,
             ozone=ozone,
             chlorine_dioxide=chlorine_dioxide
-            )
-       )
+)
+)
 }

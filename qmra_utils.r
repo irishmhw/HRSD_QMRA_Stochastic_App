@@ -1,5 +1,3 @@
-source('./treatment_dist.r')
-source('./gof.r')
 
 qmra.exponential <- function(k,dose) {
   return(1 - exp(-k*dose))

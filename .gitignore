@@ -1,5 +1,5 @@
 .DS_Store
+.RHistory
 .RData
 .Rproj
-.Rapp*
-.Rhistory
+.Rapp*.Rhistory

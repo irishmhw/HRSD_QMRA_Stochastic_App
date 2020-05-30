@@ -19,7 +19,7 @@ TriRand <- function(minValue, likeValue, maxValue)
 			tt = maxValue-sqrt((1-z)*(maxValue-minValue)*(maxValue-likeValue))
 			if (tt < likeValue) {return(t)} else{return(tt)}
 	}
-	
-	
 
-
+rtri <- function(n, minValue, likeValue, maxValue){
+  return( sapply(rep(minValue, n), TriRand, likeValue, maxValue) )
+}
