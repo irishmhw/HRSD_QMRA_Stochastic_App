@@ -69,7 +69,7 @@ ui <- fluidPage(
       sliderInput('coagEff', 'Efficiency', 0, 1, 1),
       selectInput('disinfect1', 'Disinfection 1: ', disinfect$title, selected='Ozone'),
       sliderInput('disinfect1Eff', 'Efficiency', 0, 1, 1),
-      selectInput('bioFilt','Bio Filtration:', c('biofiltration','none')),
+      selectInput('bioFilt','Bio Filtration:', c('biofiltration')),
       sliderInput('bioFiltEff', 'Efficiency', 0, 1, 1),
       selectInput('filt','Filtration:', filt$title),
       sliderInput('filtEff', 'Efficiency', 0, 1, 1),
@@ -242,19 +242,20 @@ server <- function(input, output, session) {
       # Handle the results.
       
       # First the data itself.
+      prbs <- c(0.005, 0.05, 0.5, 0.95, 0.995)
       output$mcData <- renderUI(
+        
         if(input$run){
           div(
             h1("Results"),
-            # TODO Make these tables nicer
             h2("Risk"),
-            renderPrint(summary(mcRes$risk)),
+            renderTable(apply(mcRes$risk, 2, quantile, probs=prbs), rownames = TRUE, digits = -4),
             h2("Risk Morb"),
-            renderPrint(summary(mcRes$riskMorb)),
+            renderTable(apply(mcRes$riskMorb, 2, quantile, probs=prbs), rownames = TRUE, digits = -4),
             h2("Annual Risk Morb"),
-            renderPrint(summary(annRisk)),
+            renderTable(apply(annRisk, 2, quantile, probs=prbs), rownames = TRUE, digits = -4),
             h2("DALYs"),
-            renderPrint(summary(dalys))
+            renderTable(apply(dalys, 2, quantile, probs=prbs), rownames = TRUE, digits = -4)
           )
         }
       )
@@ -281,7 +282,7 @@ server <- function(input, output, session) {
             colnames(risk) <- cols
             colnames(illness) <- cols
             
-            plots[[i]] <- qmra.treatmentPlots(organisms[i,]$name, dose, risk, illness)
+            plots[[i]] <- suppressWarnings(qmra.treatmentPlots(organisms[i,]$name, dose, risk, illness))
           }
           
           grid.arrange(grobs=plots, nrows=5, ncol=1, heights=unit(rep(8,5), rep('in', 5)))
