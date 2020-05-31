@@ -64,13 +64,13 @@ qmra._MonteCarlo <- function(maxiter=100,
   treatment <- treatmentDist(maxiter)
   coag <- treatment$coag
   filtMap <- list(
-    'filtNc' = treatment$filt_nc, 
+    'filt_nc' = treatment$filt_nc, 
     'sand' = treatment$filt_sand,
     'ultra' = treatment$filt_ultra,
     'micro' = treatment$filt_micro
   )
   filt <- filtMap[[filtName]]
-  bioFilt <- treatment$bio_filt #FIXME ******
+  bioFilt <- treatment$bio_filt 
   
   dInfMap <- list(
     'chlorine' = treatment$chlorine,
