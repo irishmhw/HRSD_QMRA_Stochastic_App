@@ -2,7 +2,7 @@ library(testthat)
 
 source('./monte_carlo.r')
 
-maxiter <- 1000 # should be 1000
+maxiter <- 10000 # should be 1000
 
 # use default data for most tests
 defaultData <- read.csv('default_MPN.csv', header=TRUE, col.names = c('x'))
@@ -110,7 +110,7 @@ test_that('Final illness quantiles are in expected range' {
   
   rqs <- apply(res$risk, 2, quantile, probs=prbs)
   
-  # Rota PostUV
+  # Rota
   expect_equal(rqs[1,1],2.69e-08)
   expect_equal(rqs[2,3],2.10e-11, tolerance=1e-10)
   expect_equal(rqs[3,3],4.92e-09, tolerance=1e-8)

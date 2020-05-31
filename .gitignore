@@ -2,4 +2,5 @@
 .RHistory
 .RData
 .Rproj
-.Rapp*.Rhistory
+.Rapp*
+.Rhistory
