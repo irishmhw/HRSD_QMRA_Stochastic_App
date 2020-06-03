@@ -4,8 +4,8 @@
 Using a RStudio on a machine that has R version 3.6 or later, run the following snipets below. This will launch the app, and allow you to test it. You can then interact with the app in the screen that appears on a Mac, or in the browser on PC. You can also select to use the app in a browser in either platform. It is recommended to copy and paste the block of code all at one into RStudio. 
 
 ```r
-if("shiny" %in% rownames(installed.packages()) == FALSE) {install.packages("shiny"); require(shiny)} else{require(shiny)}
-if("shinyjs" %in% rownames(installed.packages()) == FALSE) {install.packages("shinyjs"); require(shinyjs)} else{require(shinyjs)}
+if("shiny" %in% rownames(installed.packages()) == FALSE) {install.packages("shiny", dependencies = TRUE); require(shiny)} else{require(shiny)}
+if("shinyjs" %in% rownames(installed.packages()) == FALSE) {install.packages("shinyjs", dependencies = TRUE); require(shinyjs)} else{require(shinyjs)}
 runGitHub('HRSD_QMRA_Stochastic_App', 'irishmhw')
 ```
 
