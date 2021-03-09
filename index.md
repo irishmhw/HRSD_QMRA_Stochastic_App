@@ -12,7 +12,7 @@ Follow the instructions in the list below and you will be able to operate the ap
     - ``` if("shiny" %in% row.names(installed.packages())==FALSE){install.packages("shiny"); require(shiny)}else{require(shiny)} ```
     - This will automatically install the package and load it if you do not have it installed. This can be edited to inlcude the (..., depdendencies=TRUE) in the ```install.pacakges()``` statement, but that is not necesaarily neeed to operate the app. 
     - After the shiny package is installed and you have seen that it is loaded then
-    - ```runApp(app.r)``` 
+    - ```runApp("app.r")``` 
     - This will open a new browser window and you can interact with the QMRA app
 - Questions can be delivered to Dr. Weir, please be patient for a response.
 
