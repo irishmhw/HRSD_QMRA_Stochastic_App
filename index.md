@@ -1,30 +1,34 @@
-## Welcome to GitHub Pages
+# Stochastic QMRA Model Application for HRSD 
 
-You can use the [editor on GitHub](https://github.com/irishmhw/HRSD_QMRA_Stochastic_App/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Purpose
+This app was developed in the shiny interface in R, but outside of R-studio, for more information on that please see the use section below. The app was developed under a contract with the Hampton Roads Sanitation District (HRSD) for their SWIFT wastewater reuse facility in VA, USA. This facility is a state-of-the-art wastewater reuse system that was also built to be an educational setting for Environmental Engineering and Science. In an effort to support their decision making and risk communication with the communities downfield of their discharge into the groundwater, a quantitative microbial risk assessment (QMRA) model was developed. Contracting with Mark H. Weir Ph.D. ([irishmhw](https://github.com/irishmhw)) and [Nikki Beestch](https://www.linkedin.com/in/nikki-beetsch-ahrns-247ab89/) with NSF International, this QMRA model was developed. To facilitate the use of the model the shiny app that can be found at the repository link or can be downlodaed too. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Use of the QMRA Model
+Follow the instructions in the list below and you will be able to operate the app. You __will require__ R (tested last on version 3.4.3). The more updated the version of R the more likely that dependencies for shiny apps will not be present. Downgrade your R implementation or conduct a fresh install on a previous stable version of R on another or virtual machine if needed.
 
-### Markdown
+- Download the repository using the green code button on the repo.
+- unzip the file
+- In your R console of choosing enter the follwoing without the bullet
+    - ``` if("shiny" %in% row.names(installed.packages())==FALSE){install.packages("shiny"); require(shiny)}else{require(shiny)} ```
+    - This will automatically install the package and load it if you do not have it installed. This can be edited to inlcude the (..., depdendencies=TRUE) in the ```install.pacakges()``` statement, but that is not necesaarily neeed to operate the app. 
+    - After the shiny package is installed and you have seen that it is loaded then
+    - ```runApp(app.r)``` 
+    - This will open a new browser window and you can interact with the QMRA app
+- Questions can be delivered to Dr. Weir, please be patient for a response.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Live Operation of the Model
 
-```markdown
-Syntax highlighted code block
+Coming soon an implementation of the model here. 
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
+
+
+
+___________ General GitHub Pages Information that I kept in ___________
+
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
