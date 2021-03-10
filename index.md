@@ -9,7 +9,7 @@ Follow the instructions in the list below and you will be able to operate the ap
 - Download the repository using the green code button on the repo.
 - unzip the file
 - In your R console of choosing enter the follwoing without the bullet
-    - ``` if("shiny" %in% row.names(installed.packages())==FALSE){install.packages("shiny"); require(shiny)}else{require(shiny)} ```
+    - ``` if("shiny" %in% row.names(installed.packages())==FALSE){install.packages("shiny"); require(shiny)}else{require(shiny)} ``` and ```if("shinyjs" %in% rownames(installed.packages()) == FALSE) {install.packages("shinyjs"); require(shinyjs)}else{require(shinyjs)}```
     - This will automatically install the package and load it if you do not have it installed. This can be edited to inlcude the (..., depdendencies=TRUE) in the ```install.pacakges()``` statement, but that is not necesaarily neeed to operate the app. 
     - After the shiny package is installed and you have seen that it is loaded then
     - ```runApp("app.r")``` 
